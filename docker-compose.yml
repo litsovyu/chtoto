@@ -1,0 +1,58 @@
+version: '2.4'
+services:
+  adminer:
+    image: adminer
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - ./docker/adminer/plugins-enabled:/var/www/html/plugins-enabled
+    ports:
+      - 8001:8080
+
+  db:
+    image: postgres:13-alpine
+    # command: ['postgres', '-c', 'log_statement=all']
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker/db/db_data:/var/lib/postgresql/data
+      - ./docker/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: hasura
+      POSTGRES_DB: hasura
+      POSTGRES_PASSWORD: hasura
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hasura']
+      interval: 30s
+      timeout: 5s
+      retries: 100
+  ql:
+    image: hasura/graphql-engine:v1.3.3
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '4040:8080'
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://hasura:hasura@db:5432/hasura
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ENABLE_TELEMETRY: 'false'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type": "RS512", "key": "-----BEGIN CERTIFICATE-----\nMIIDBTCCAe2gAwIBAgIJKF8z13BOijdjMA0GCSqGSIb3DQEBCwUAMCAxHjAcBgNV\nBAMTFWFiaWUtZGV2LmV1LmF1dGgwLmNvbTAeFw0yMDAzMjkwMTU2MzZaFw0zMzEy\nMDYwMTU2MzZaMCAxHjAcBgNVBAMTFWFiaWUtZGV2LmV1LmF1dGgwLmNvbTCCASIw\nDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANCZVKzc8vs/u1AAm/SBeP6A6nOo\nIyXFq6Y1Ui3LoVWQc1B9A0/yZpcJtua9XCr86ID6odMJAl5nmHnhXtqJECVdWok2\nCG0ujVXtEC4SptqPNjP1k7QbxI8lh7BCRMc3GmvbD30sI8o20lEUXdECA/q73fiV\nICrz7raT4mvIu1aPUqcYWC7VtTZ60DwOXlvLzypkLqbcIrqqo8gZrvXmn4qdkS4q\nraHkMf7gqdmG08vuYo1eQ1vbdqZb1iPe55glA2e3HcFW2QUUMIpM+mFDwLnryyDZ\ninABgjqV6++0RvCFLW6wLLxvDwt3Yt9jMIg8Rddc3E3cLYQ0/cwx6d8CvVUCAwEA\nAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUs7qVy1vCApcSVSfajvx8\noqqZ3/swDgYDVR0PAQH/BAQDAgKEMA0GCSqGSIb3DQEBCwUAA4IBAQAaOltJGLIg\nKwWZNSxsSRrZz6NqZDjdT42weuMuZWf4wLdREdWIfapYxEdYRkuvu6l6L3dkZ96W\nVYTY0ABQenWtUU5AHVXYbdIS7OUPtg7aIxIUhyHEh/PZQOUJNHdzWmdftftU7pt7\nkOHlR6k3Wh7CtHCYPzI4JP4DwfB7mffvGks7ehuAzkPFiGup62t8zmHDtNUoHv0+\nzeWh0K+EsE/0noir1HCEpTL6moEN5i9GLodNDdr4FRzFttY94HODiPcXazMu9YeK\nryYxGxAqQI5B4oPTQhG1zx/Dzmp3roFX401tndQewZaIkqy3OGEXRMnNudKGgAky\nA/f0Aj53w/qR\n-----END CERTIFICATE-----"}'
+      HASURA_GRAPHQL_ADMIN_SECRET: 'secret'
+      X_NITRA_CF_KEY: 'secret'
+
+  mssql:
+    #Заменить в docker compose MSSQL для поддержки m1 #10 на mcr.microsoft.com/azure-sql-edge
+    #image: mcr.microsoft.com/mssql/server:2017-latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    ports:
+      - '1433:1433'
+    environment:
+      SA_PASSWORD: 'cPassword1'
+      ACCEPT_EULA: 'Y'
+      MSSQL_COLLATION: 'SQL_Ukrainian_CP1251_CI_AS'
