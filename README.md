@@ -7,3 +7,9 @@ Status of Last Deployment:<br>
 
 
 ![version-badge](https://img.shields.io/badge/version-0.14.0-orange.svg) ![release-badge](https://img.shields.io/badge/release-0.12.5-brightgreen.svg) ![price-badge](https://img.shields.io/badge/price-free-red.svg) ![license-badge](https://img.shields.io/badge/license-MIT-blue.svg)
+
+Status of Last Deployment:<br>
+<img src="https://github.com/abinbevefes/atlas-pro/workflows/atlas-firebase-hosting/badge.svg"><br>
+<img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-android/badge.svg"><br>
+<img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-ios/badge.svg"><br>
+<img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-liveupdate/badge.svg"><br>
