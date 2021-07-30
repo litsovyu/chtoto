@@ -1,13 +1,10 @@
 name: first_ga
 on:
   schedule:
-    - cron: '45 * * * *'
+    - cron: '0,10,20,30,40,50 * * * *'
 jobs:
   build:
    runs-on    : ubuntu-latest
    steps:
-     - uses: actions/checkout@v2
-     
      - name: kdkdkd
-       shell: bash
        run: echo "Hello"
