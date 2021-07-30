@@ -13,3 +13,5 @@ Status of Last Deployment:<br>
 <img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-android/badge.svg"><br>
 <img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-ios/badge.svg"><br>
 <img src="https://github.com/abinbevefes/atlas-pro/workflows/mobile-liveupdate/badge.svg"><br>
+
+etc
